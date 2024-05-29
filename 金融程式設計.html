@@ -291,5 +291,45 @@ addp.append(mpf.make_addplot(data["ceil"]))<br>
 addp.append(mpf.make_addplot(data["floor"]))<br>
 mpf.plot(data, type = "candle", style = mstyle, addplot = addp)
     </div>
+
+ <hr>
+
+<h2>繪製股市的壓力線與移動平均</h2>
+<img src="https://i.postimg.cc/zXtVDy3d/image.png"><br>
+<h2>2454（聯發科）</h2><br>
+<h2>主要是合併該股市的壓力線與移動平均讓我們能夠更清楚得做出分析（此股市依聯發科為例股試圖</h2><br>
+    <hr>
+    
+    <div>
+    <h3>程式碼</h3>
+!pip install yfinance<br>
+!pip install FinMind<br>
+!pip install mplfinance<br>
+!pip install numpy_financial<br>
+
+from Data import getDataFM, getDataYF<br>
+from FinancialMetrics import RiskReturnRatio<br>
+import mplfinance as mpf<br>
+# 取得台股資料<br>
+mcolor = mpf.make_marketcolors(up="r", down="g", inherit=True)<br>
+mstyle = mpf.make_mpf_style(base_mpf_style="yahoo", marketcolors=mcolor)<br>
+prod = "2454"<br>
+data = getDataYF(prod)<br>
+data["5ma"] = data.rolling(5)["close"].mean()<br>
+data["20ma"] = data.rolling(20)["close"].mean()<br>
+data["60ma"] = data.rolling(60)["close"].mean()<br>
+data["ceil"] = data.rolling(60)["close"].max()<br>
+data["floor"] = data.rolling(60)["close"].min()<br>
+data = data.iloc[-200:].copy()<br>
+addp = []<br>
+addp.append(mpf.make_addplot(data["ceil"]))<br>
+addp.append(mpf.make_addplot(data["floor"]))<br>
+addp.append(mpf.make_addplot(data["5ma"]))<br>
+addp.append(mpf.make_addplot(data["20ma"]))<br>
+addp.append(mpf.make_addplot(data["60ma"]))<br>
+mpf.plot(data, type="candle", style=mstyle, addplot=addp)<br>
+data = getDataFM(prod)
+</div>
+	    
 </body>
 </html>
